@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>To 泽曦大宝：我们的2025</title>
+    <style>
+        /* --- 1. 柔美粉色空间 --- */
+        body {
+            margin: 0;
+            padding: 0;
+            /* 背景：柔和的莫兰迪粉色渐变 */
+            background: radial-gradient(circle at 50% 30%, #ffe0e6, #ff9a9e);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: "PingFang SC", sans-serif;
+            perspective: 1000px;
+        }
+
+        .header {
+            position: absolute;
+            top: 5%;
+            z-index: 20;
+            text-align: center;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(214, 51, 108, 0.4);
+            pointer-events: none;
+        }
+        h1 { margin: 0; font-size: 1.5rem; letter-spacing: 1px; }
+        .subtitle { font-size: 0.8rem; opacity: 0.9; margin-top: 5px; }
+
+        /* --- 2. 旋转舞台 --- */
+        .stage {
+            position: absolute;
+            /* 关键修改：位置稍微靠下，留出上方空间给更高的树 */
+            bottom: 12%; 
+            left: 50%;
+            width: 0;
+            height: 0;
+            transform-style: preserve-3d;
+        }
+
+        .tree-gyro {
+            position: relative;
+            transform-style: preserve-3d;
+            /* 绕 Y 轴旋转，底部圆心固定 */
+            animation: spin 20s infinite linear;
+        }
+
+        /* 触摸/悬停暂停 */
+        .stage:active .tree-gyro, .stage:hover .tree-gyro {
+            animation-play-state: paused;
+        }
+
+        @keyframes spin {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        /* --- 3. 真实感树干 (加长版) --- */
+        .trunk-base {
+            position: absolute;
+            bottom: 0;
+            left: -16px; /* 居中 */
+            width: 32px;
+            /* 关键修改：树干高度增加到 440px */
+            height: 440px; 
+            
+            /* 树皮纹理 */
+            background: linear-gradient(90deg, #5d4037, #8d6e63, #5d4037);
+            /* 形状：修长的锥体 */
+            clip-path: polygon(25% 0, 75% 0, 100% 100%, 0% 100%);
+            transform-origin: bottom center;
+            transform: translateZ(0.1px);
+        }
+
+        /* 树根细节 */
+        .root-knot {
+            position: absolute;
+            bottom: -5px;
+            width: 20px;
+            height: 40px;
+            background: #4e342e;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        }
+        .rk-1 { left: -20px; transform: rotate(45deg); }
+        .rk-2 { right: -15px; transform: rotate(-30deg); }
+
+        /* --- 4. 树叶粒子 --- */
+        .leaf {
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.8), 0 0 8px rgba(255, 192, 203, 0.4);
+            transform-style: preserve-3d;
+        }
+
+        /* --- 5. 底部阴影 --- */
+        .floor-shadow {
+            position: absolute;
+            top: 0;
+            left: -100px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, transparent 60%);
+            transform: rotateX(90deg);
+            pointer-events: none;
+        }
+
+        /* --- 6. 果实 (相册入口) --- */
+        .fruit {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            background: radial-gradient(circle at 35% 35%, #fff, #ff6b81, #c2185b);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.6);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transform-style: preserve-3d;
+            z-index: 100;
+        }
+        .fruit::after { content: '♥'; color: #880e4f; opacity: 0.6; }
+
+        /* --- 7. 弹窗 --- */
+        .modal-wrap {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(80, 50, 50, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .modal-wrap.active { display: flex; opacity: 1; }
+        
+        .card {
+            background: #fff;
+            padding: 10px 10px 35px 10px;
+            border-radius: 8px;
+            text-align: center;
+            transform: scale(0.8) translateY(20px);
+            transition: transform 0.3s;
+            max-width: 80%;
+        }
+        .modal-wrap.active .card { transform: scale(1) translateY(0); }
+        
+        .card img {
+            width: 260px;
+            height: 260px;
+            object-fit: cover;
+            border-radius: 4px;
+            background: #f0f0f0;
+        }
+        .card-text { margin-top: 10px; color: #444; font-weight: bold; font-family: cursive; }
+        .card-tip { font-size: 10px; color: #aaa; margin-top: 5px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🎄 泽曦大宝的粉色圣诞 🎄</h1>
+        <div class="subtitle">轻触果实 · 暂停美好 · 打开回忆</div>
+    </div>
+
+    <div class="stage">
+        <div class="tree-gyro" id="treeRoot">
+            <div class="trunk-base">
+                <div class="root-knot rk-1"></div>
+                <div class="root-knot rk-2"></div>
+            </div>
+            <div class="floor-shadow"></div>
+            </div>
+    </div>
+
+    <div class="modal-wrap" id="modal" onclick="closeModal()">
+        <div class="card" onclick="event.stopPropagation()">
+            <img id="m-img" src="" alt="">
+            <div class="card-text" id="m-text"></div>
+            <div class="card-tip">再次点击背景关闭</div>
+        </div>
+    </div>
+
+    <script>
+        // === 1. 照片数据 ===
+        const memories = [
+            { img: "1.jpg?w=500", text: "爱你就像爱生命" },
+            { img: "2.jpg?w=500", text: "和大宝一起旅游啦~" },
+            { img: "3.jpg?w=500", text: "第一次拍海报！" },
+            { img: "4.jpg?w=500", text: "这一刻好像永远" },
+            { img: "5.jpg?w=500", text: "大宝做的饭" },
+            { img: "6.jpg?w=500", text: "我家磨牙的小猪" },
+            { img: "7.jpg?w=500", text: "爱你，不止这一刻" }
+        ];
+
+        const treeRoot = document.getElementById('treeRoot');
+        
+        // === 关键调整：树的参数 ===
+        const leafCount = 800; // 增加叶子数量，防止树变高后显得稀疏
+        const treeHeight = 440; // 树的高度增加 (原340 -> 440)
+        const maxRadius = 135;  // 底部半径微调
+
+        // === 2. 构建逻辑 ===
+        function buildTree() {
+            // 生成树叶
+            for (let i = 0; i < leafCount; i++) {
+                const leaf = document.createElement('div');
+                leaf.classList.add('leaf');
+
+                const hRatio = i / leafCount; // 0 ~ 1
+                const y = -hRatio * treeHeight; // 向上生长
+                
+                // 半径曲线：让树看起来稍微瘦长一点
+                const r = maxRadius * (1 - hRatio);
+                const angle = i * 137.5; 
+                const randomR = r * (0.8 + Math.random() * 0.4);
+
+                const rad = angle * Math.PI / 180;
+                const x = Math.cos(rad) * randomR;
+                const z = Math.sin(rad) * randomR;
+
+                if(Math.random() > 0.85) {
+                    leaf.style.backgroundColor = '#ff69b4';
+                    leaf.style.boxShadow = '0 0 5px #ff69b4';
+                }
+
+                leaf.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
+                treeRoot.appendChild(leaf);
+            }
+
+            // 生成果实
+            memories.forEach((memo, i) => {
+                const fruit = document.createElement('div');
+                fruit.classList.add('fruit');
+
+                // 果实分布范围稍微向中间集中一点，避免太靠近底部
+                const hRatio = 0.15 + (i / (memories.length - 1)) * 0.75; 
+                
+                const y = -hRatio * treeHeight;
+                const r = (maxRadius * (1 - hRatio)) + 18; 
+                
+                const angle = i * 60 + 30;
+
+                const rad = angle * Math.PI / 180;
+                const x = Math.cos(rad) * r;
+                const z = Math.sin(rad) * r;
+
+                fruit.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
+                
+                fruit.onclick = (e) => {
+                    e.stopPropagation();
+                    openModal(i);
+                };
+
+                treeRoot.appendChild(fruit);
+            });
+        }
+
+        // === 3. 交互逻辑 ===
+        const modal = document.getElementById('modal');
+        const mImg = document.getElementById('m-img');
+        const mText = document.getElementById('m-text');
+
+        function openModal(index) {
+            mImg.src = memories[index].img;
+            mText.innerText = memories[index].text;
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        // === 4. 飘雪特效 ===
+        function snow() {
+            const s = document.createElement('div');
+            s.style.position = 'absolute';
+            s.style.top = '-10px';
+            s.style.left = Math.random() * 100 + '%';
+            s.style.width = Math.random() * 4 + 2 + 'px';
+            s.style.height = s.style.width;
+            s.style.background = 'rgba(255,255,255,0.7)';
+            s.style.borderRadius = '50%';
+            s.style.pointerEvents = 'none';
+            s.style.animation = `fall ${Math.random()*4+4}s linear`;
+            document.body.appendChild(s);
+            setTimeout(() => s.remove(), 8000);
+        }
+        
+        const style = document.createElement('style');
+        style.innerHTML = `@keyframes fall { to { transform: translateY(110vh); } }`;
+        document.head.appendChild(style);
+        
+        setInterval(snow, 100);
+
+        buildTree();
+
+    </script>
+</body>
+</html>
